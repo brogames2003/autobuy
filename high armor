@@ -1,0 +1,9 @@
+local Plr = game.Players.LocalPlayer
+        local OldPos = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position
+        wait(0.3)
+        Plr.Character.HumanoidRootPart.CFrame = game.Workspace.Map.Shop["[Heavy Armor] - $1,500"].Head.CFrame
+        wait(0.35)
+        fireclickdetector(game.Workspace.Map.Shop["[Heavy Armor] - $1,500"].ClickDetector)
+        wait(0.4)
+        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(OldPos)
+        wait(0.25)
