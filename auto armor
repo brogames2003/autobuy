@@ -1,0 +1,52 @@
+local PERCENT_TO_BUY_ARMOR   = 94
+local COMMAND_TO_STOP_BUYING = (':stop')
+local COMMAND_TO_START_BUYING = (':start')
+
+function announce(title,text,time)
+    game.StarterGui:SetCore("SendNotification", {
+        Title = title;
+        Text = text;
+        Duration = time;
+    })
+end
+announce('Autobuying armor at %' .. tostring(PERCENT_TO_BUY_ARMOR), 'chat ' .. COMMAND_TO_STOP_BUYING .. ' to stop or chat '.. COMMAND_TO_START_BUYING .. ' to start', 8)
+
+local Stopped = false
+local Player = game.Players.LocalPlayer
+function Main1()
+    while wait() do
+        local function AutoArmor()
+            local Origin = Player.Character.HumanoidRootPart.CFrame
+            local Armor = Player.Character.Info.Armor
+            if Armor.Value <= PERCENT_TO_BUY_ARMOR and Stopped == false then
+                repeat
+                    wait()    
+                    Player.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace").Map.Shop["[Heavy Armor] - $1,500"].ClickDetector.Parent.Head.Position)
+                    fireclickdetector(game:GetService("Workspace").Map.Shop["[Heavy Armor] - $1,500"].ClickDetector)
+                until Armor.Value == 95 or Player.Data.Cash.Value < 1500
+                Player.Character.HumanoidRootPart.CFrame = Origin
+            end
+        end
+        local s,e = pcall(AutoArmor)
+    end
+end
+function Main2()
+    Player.Chatted:Connect(function(msg)
+        if msg == COMMAND_TO_STOP_BUYING and Stopped == false then
+            Stopped = true
+            announce('stopped buying', '',5)
+        end
+    end)
+end
+function Main3()
+    Player.Chatted:Connect(function(msg)
+        if msg == COMMAND_TO_START_BUYING and Stopped == true then
+            Stopped = false
+            announce('started buying', '',5)
+        end
+    end)
+end
+
+coroutine.resume(coroutine.create(Main1))
+coroutine.resume(coroutine.create(Main2))
+coroutine.resume(coroutine.create(Main3))
